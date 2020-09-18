@@ -15,6 +15,7 @@ RUN \
     curl \
     gcc \
     go \
+    musl-dev \
     nodejs \
     npm && \
  echo "**** install scrutiny ****" && \
