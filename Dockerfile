@@ -13,6 +13,7 @@ RUN \
     smartmontools && \
  apk add --no-cache --virtual=build-dependencies \
     curl \
+    gcc \
     go \
     nodejs \
     npm && \
