@@ -1,0 +1,29 @@
+---
+
+# jenkins variables
+project_name: docker-scrutiny
+external_type: github_commit
+release_type: stable
+release_tag: latest
+ls_branch: master
+repo_vars:
+  - EXT_GIT_BRANCH = 'master'
+  - EXT_USER = 'AnalogJ'
+  - EXT_REPO = 'scrutiny'
+  - BUILD_VERSION_ARG = 'SCRUTINY_VERSION'
+  - LS_USER = 'linuxserver'
+  - LS_REPO = 'docker-scrutiny'
+  - CONTAINER_NAME = 'scrutiny'
+  - DOCKERHUB_IMAGE = 'linuxserver/scrutiny'
+  - DEV_DOCKERHUB_IMAGE = 'lsiodev/scrutiny'
+  - PR_DOCKERHUB_IMAGE = 'lspipepr/scrutiny'
+  - DIST_IMAGE = 'alpine'
+  - MULTIARCH='true'
+  - CI='true'
+  - CI_WEB='true'
+  - CI_PORT='8080'
+  - CI_SSL='false'
+  - CI_DELAY='120'
+  - CI_DOCKERENV='TZ=US/Pacific'
+  - CI_AUTH='user:password'
+  - CI_WEBPATH=''
