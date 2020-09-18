@@ -1,0 +1,1 @@
+0 0 * * * /usr/local/bin/scrutiny-collector-metrics run --api-endpoint {SCRUTINY_API_ENDPOINT} >> /config/log/scrutiny-collector-metrics.log 2>&1
