@@ -3,8 +3,8 @@
 # project information
 project_name: scrutiny
 project_url: "https://github.com/AnalogJ/scrutiny"
-project_logo: "https://github.com/AnalogJ/scrutiny/raw/master/webapp/frontend/src/assets/images/logo/scrutiny-logo-dark.png"
-project_blurb: "[{{ project_name|capitalize }}]({{ project_url }}) WebUI for smartd S.M.A.R.T monitoring."
+project_logo: "https://raw.githubusercontent.com/AnalogJ/scrutiny/master/docs/dashboard.png"
+project_blurb: "[{{ project_name|capitalize }}]({{ project_url }}) WebUI for smartd S.M.A.R.T monitoring. Scrutiny is a Hard Drive Health Dashboard & Monitoring solution, merging manufacturer provided S.M.A.R.T metrics with real-world failure rates from Backblaze."
 project_lsio_github_repo_url: "https://github.com/linuxserver/docker-{{ project_name }}"
 
 project_blurb_optional_extras_enabled: false
@@ -29,13 +29,15 @@ param_usage_include_net: false
 param_usage_include_env: true
 param_env_vars:
   - { env_var: "TZ", env_value: "Europe/London", desc: "Specify a timezone to use EG Europe/London." }
-  - { env_var: "SCRUTINY_API_ENDPOINT", env_value: "http://localhost:8080", desc: "(optional) API endpoint of the scrutiny UI." }
-  - { env_var: "SCRUTINY_WEB", env_value: "true", desc: "(optional) Run the web service." }
-  - { env_var: "SCRUTINY_COLLECTOR", env_value: "true", desc: "(optional) Run the metrics collector." }
+  - { env_var: "SCRUTINY_API_ENDPOINT", env_value: "http://localhost:8080", desc: "# optional - API endpoint of the scrutiny UI." }
+  - { env_var: "SCRUTINY_WEB", env_value: "true", desc: "# optional - Run the web service." }
+  - { env_var: "SCRUTINY_COLLECTOR", env_value: "true", desc: "# optional - Run the metrics collector." }
 
 param_usage_include_vols: true
 param_volumes:
-  - { vol_path: "/config", vol_host_path: "<path to config>", desc: "Where scrutiny config is stored." }
+  - { vol_path: "/config", vol_host_path: "<path to config>", desc: "Where config is stored." }
+  - { vol_path: "/dev/disk", vol_host_path: "/dev/disk", desc: "This is how Scrutiny accesses drives." }
+  - { vol_path: "/run/udev", vol_host_path: "/run/udev:ro", desc: "Provides necessary metadata to Scrutiny." }
 
 param_usage_include_ports: true
 param_ports:
@@ -60,12 +62,14 @@ opt_cap_add_param_vars:
 optional_block_1: false
 optional_block_1_items: ""
 
+privileged: true
+
 # application setup block
 app_setup_block_enabled: true
 app_setup_block: |
-  This container can be run as an 'all-in-one' deployment or as a hub / spoke deployment. Use the environment variables `SCRUTINY_WEB` and `SCRUTINY_COLLECTOR` control which mode the containe will run in. Setting both to `true` will deploy the container as both a collector and the web UI / "Port for scrutiny's web interface and API."
+  This container can be run as an 'all-in-one' deployment or as a hub / spoke deployment. Use the environment variables `SCRUTINY_WEB` and `SCRUTINY_COLLECTOR` to control the mode of the container. Setting both to `true` will deploy the container as both a collector and the web UI - this is the simplest and most straightforward deployment approach.
 
-  You can deploy the same container on multiple hosts running only the collector by specifying the `SCRUTINY_API_ENDPOINT` to point to the host that is running the API.
+  To make use of the hub and spoke model, run this container in "collector" mode by specifying `SCRUTINY_API_ENDPOINT`. Set this to the host that is running the API. For this to work, you will need to expose the API port directly from the container (by default this is `8080`).
 
 # changelog
 changelogs:
