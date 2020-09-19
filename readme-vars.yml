@@ -62,6 +62,8 @@ opt_cap_add_param_vars:
 optional_block_1: false
 optional_block_1_items: ""
 
+privileged: true
+
 # application setup block
 app_setup_block_enabled: true
 app_setup_block: |
