@@ -36,8 +36,8 @@ param_env_vars:
 param_usage_include_vols: true
 param_volumes:
   - { vol_path: "/config", vol_host_path: "<path to config>", desc: "Where config is stored." }
-  - { vol_path: "/dev/disk", vol_host_path: "/dev/disk", desc: "This is how Scrutiny accesses drives." }
-  - { vol_path: "/run/udev", vol_host_path: "/run/udev:ro", desc: "Provides necessary metadata to Scrutiny." }
+  - { vol_path: "/dev/disk:ro", vol_host_path: "/dev/disk", desc: "This is how Scrutiny accesses drives." }
+  - { vol_path: "/run/udev:ro", vol_host_path: "/run/udev", desc: "Provides necessary metadata to Scrutiny." }
 
 param_usage_include_ports: true
 param_ports:
