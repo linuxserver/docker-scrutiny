@@ -73,7 +73,7 @@ docker create \
   -p 8080:8080 \
   -v <path to config>:/config \
   -v /dev/disk:/dev/disk \
-  -v /run/udev:ro:/run/udev \
+  -v /run/udev,readonly:/run/udev \
   --restart unless-stopped \
   linuxserver/scrutiny
 ```
@@ -101,7 +101,7 @@ services:
     volumes:
       - <path to config>:/config
       - /dev/disk:/dev/disk
-      - /run/udev:ro:/run/udev
+      - /run/udev,readonly:/run/udev
     ports:
       - 8080:8080
     restart: unless-stopped
