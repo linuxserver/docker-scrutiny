@@ -72,8 +72,8 @@ docker create \
   -e SCRUTINY_COLLECTOR=true \
   -p 8080:8080 \
   -v <path to config>:/config \
-  -v /dev/disk:/dev/disk \
-  -v /run/udev:ro:/run/udev \
+  -v /dev/disk:/dev/disk:ro \
+  -v /run/udev:/run/udev:ro \
   --restart unless-stopped \
   linuxserver/scrutiny
 ```
@@ -100,8 +100,8 @@ services:
       - SCRUTINY_COLLECTOR=true
     volumes:
       - <path to config>:/config
-      - /dev/disk:/dev/disk
-      - /run/udev:ro:/run/udev
+      - /dev/disk:/dev/disk:ro
+      - /run/udev:/run/udev:ro
     ports:
       - 8080:8080
     restart: unless-stopped
@@ -121,8 +121,8 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e SCRUTINY_WEB=true` | # optional - Run the web service. |
 | `-e SCRUTINY_COLLECTOR=true` | # optional - Run the metrics collector. |
 | `-v /config` | Where config is stored. |
-| `-v /dev/disk` | This is how Scrutiny accesses drives. |
-| `-v /run/udev` | Provides necessary metadata to Scrutiny. |
+| `-v /dev/disk:ro` | This is how Scrutiny accesses drives. |
+| `-v /run/udev:ro` | Provides necessary metadata to Scrutiny. |
 
 ## Environment variables from files (Docker secrets)
 
