@@ -35,9 +35,9 @@ Find us at:
 [![Jenkins Build](https://img.shields.io/jenkins/build?labelColor=555555&logoColor=ffffff&style=for-the-badge&jobUrl=https%3A%2F%2Fci.linuxserver.io%2Fjob%2FDocker-Pipeline-Builders%2Fjob%2Fdocker-scrutiny%2Fjob%2Fmaster%2F&logo=jenkins)](https://ci.linuxserver.io/job/Docker-Pipeline-Builders/job/docker-scrutiny/job/master/)
 [![LSIO CI](https://img.shields.io/badge/dynamic/yaml?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=CI&query=CI&url=https%3A%2F%2Flsio-ci.ams3.digitaloceanspaces.com%2Flinuxserver%2Fscrutiny%2Flatest%2Fci-status.yml)](https://lsio-ci.ams3.digitaloceanspaces.com/linuxserver/scrutiny/latest/index.html)
 
-[Scrutiny](https://github.com/AnalogJ/scrutiny) WebUI for smartd S.M.A.R.T monitoring.
+[Scrutiny](https://github.com/AnalogJ/scrutiny) WebUI for smartd S.M.A.R.T monitoring. Scrutiny is a Hard Drive Health Dashboard & Monitoring solution, merging manufacturer provided S.M.A.R.T metrics with real-world failure rates from Backblaze.
 
-[![scrutiny](https://github.com/AnalogJ/scrutiny/raw/master/webapp/frontend/src/assets/images/logo/scrutiny-logo-dark.png)](https://github.com/AnalogJ/scrutiny)
+[![scrutiny](https://raw.githubusercontent.com/AnalogJ/scrutiny/master/docs/dashboard.png)](https://github.com/AnalogJ/scrutiny)
 
 ## Supported Architectures
 
@@ -63,6 +63,7 @@ Here are some example snippets to help you get started creating a container.
 ```
 docker create \
   --name=scrutiny \
+  --privileged \
   -e PUID=1000 \
   -e PGID=1000 \
   -e TZ=Europe/London \
@@ -71,6 +72,8 @@ docker create \
   -e SCRUTINY_COLLECTOR=true \
   -p 8080:8080 \
   -v <path to config>:/config \
+  -v /dev/disk:/dev/disk:ro \
+  -v /run/udev:/run/udev:ro \
   --restart unless-stopped \
   linuxserver/scrutiny
 ```
@@ -87,6 +90,7 @@ services:
   scrutiny:
     image: linuxserver/scrutiny
     container_name: scrutiny
+    privileged: true
     environment:
       - PUID=1000
       - PGID=1000
@@ -96,6 +100,8 @@ services:
       - SCRUTINY_COLLECTOR=true
     volumes:
       - <path to config>:/config
+      - /dev/disk:/dev/disk:ro
+      - /run/udev:/run/udev:ro
     ports:
       - 8080:8080
     restart: unless-stopped
@@ -111,10 +117,12 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e PUID=1000` | for UserID - see below for explanation |
 | `-e PGID=1000` | for GroupID - see below for explanation |
 | `-e TZ=Europe/London` | Specify a timezone to use EG Europe/London. |
-| `-e SCRUTINY_API_ENDPOINT=http://localhost:8080` | (optional) API endpoint of the scrutiny UI. |
-| `-e SCRUTINY_WEB=true` | (optional) Run the web service. |
-| `-e SCRUTINY_COLLECTOR=true` | (optional) Run the metrics collector. |
-| `-v /config` | Where scrutiny config is stored. |
+| `-e SCRUTINY_API_ENDPOINT=http://localhost:8080` | # optional - API endpoint of the scrutiny UI. |
+| `-e SCRUTINY_WEB=true` | # optional - Run the web service. |
+| `-e SCRUTINY_COLLECTOR=true` | # optional - Run the metrics collector. |
+| `-v /config` | Where config is stored. |
+| `-v /dev/disk:ro` | This is how Scrutiny accesses drives. |
+| `-v /run/udev:ro` | Provides necessary metadata to Scrutiny. |
 
 ## Environment variables from files (Docker secrets)
 
@@ -150,9 +158,9 @@ In this instance `PUID=1000` and `PGID=1000`, to find yours use `id user` as bel
 &nbsp;
 ## Application Setup
 
-This container can be run as an 'all-in-one' deployment or as a hub / spoke deployment. Use the environment variables `SCRUTINY_WEB` and `SCRUTINY_COLLECTOR` control which mode the containe will run in. Setting both to `true` will deploy the container as both a collector and the web UI / "Port for scrutiny's web interface and API."
+This container can be run as an 'all-in-one' deployment or as a hub / spoke deployment. Use the environment variables `SCRUTINY_WEB` and `SCRUTINY_COLLECTOR` to control the mode of the container. Setting both to `true` will deploy the container as both a collector and the web UI - this is the simplest and most straightforward deployment approach.
 
-You can deploy the same container on multiple hosts running only the collector by specifying the `SCRUTINY_API_ENDPOINT` to point to the host that is running the API.
+To make use of the hub and spoke model, run this container in "collector" mode by specifying `SCRUTINY_API_ENDPOINT`. Set this to the host that is running the API. For this to work, you will need to expose the API port directly from the container (by default this is `8080`).
 
 
 ## Docker Mods
