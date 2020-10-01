@@ -29,17 +29,20 @@ param_usage_include_net: false
 param_usage_include_env: true
 param_env_vars:
   - { env_var: "TZ", env_value: "Europe/London", desc: "Specify a timezone to use EG Europe/London." }
-  - { env_var: "SCRUTINY_API_ENDPOINT", env_value: "http://localhost:8080", desc: "# optional - API endpoint of the scrutiny UI." }
+  - { env_var: "SCRUTINY_API_ENDPOINT", env_value: "http://localhost:8080", desc: "# optional - API endpoint of the scrutiny UI. Do not change unless using as a remote collector" }
   - { env_var: "SCRUTINY_WEB", env_value: "true", desc: "# optional - Run the web service." }
   - { env_var: "SCRUTINY_COLLECTOR", env_value: "true", desc: "# optional - Run the metrics collector." }
 
 param_usage_include_vols: true
 param_volumes:
-  - { vol_path: "/config", vol_host_path: "<path to config>", desc: "Where config is stored." }
-  - { vol_path: "/dev/sda:ro", vol_host_path: "/dev/sda", desc: "This is how Scrutiny accesses drives. Optionally supply `/dev:/dev` instead for all devices." }
-  - { vol_path: "/dev/sdb:ro", vol_host_path: "/dev/sdb", desc: "A second drive." }
-  - { vol_path: "/dev/nvme1n1:ro", vol_host_path: "/dev/nvme1n1", desc: "An NVMe drive. NVMe requires `--cap-add=SYS_RAWIO`." }
+  - { vol_path: "/config", vol_host_path: "/path/to/config", desc: "Where config is stored." }
   - { vol_path: "/run/udev:ro", vol_host_path: "/run/udev", desc: "Provides necessary metadata to Scrutiny." }
+
+param_device_map: true
+param_devices:
+  - { device_path: "/dev/sda", device_host_path: "/dev/sda", desc: "This is how Scrutiny accesses drives. Optionally supply `/dev:/dev` instead for all devices." }
+  - { device_path: "/dev/sdb", device_host_path: "/dev/sdb", desc: "A second drive." }
+  - { device_path: "/dev/nvme1n1", device_host_path: "/dev/nvme1n1", desc: "An NVMe drive. NVMe requires `--cap-add=SYS_ADMIN`." }
 
 param_usage_include_ports: true
 param_ports:
@@ -60,9 +63,11 @@ opt_param_devices:
 
 cap_add_param: true
 cap_add_param_vars:
-    - { cap_add_var: "SYS_ADMIN" }
     - { cap_add_var: "SYS_RAWIO" }
-
+    
+opt_cap_add_param: true
+opt_cap_add_param_vars:
+  - { cap_add_var: "SYS_ADMIN" }
 optional_block_1: false
 optional_block_1_items: ""
 
@@ -73,11 +78,13 @@ app_setup_block_enabled: true
 app_setup_block: |
   This container can be run as an 'all-in-one' deployment or as a hub / spoke deployment. Use the environment variables `SCRUTINY_WEB` and `SCRUTINY_COLLECTOR` to control the mode of the container. Setting both to `true` will deploy the container as both a collector and the web UI - this is the simplest and most straightforward deployment approach. To make use of the hub and spoke model, run this container in "collector" mode by specifying `SCRUTINY_API_ENDPOINT`. Set this to the host that is running the API. For this to work, you will need to expose the API port directly from the container (by default this is `8080`).
 
+  You may need to manually enter the container to run `scrutiny-collector-metrics run` for your first job or wait until around midnight for it to kick off.
+  
   A fully commented example configuration yaml file can be found in the original project repository [here](https://github.com/AnalogJ/scrutiny/blob/master/example.scrutiny.yaml). Place this file in the location mounted to `/config`.
 
   A note on `--cap-add` for this container: 
-    * `SYS_ADMIN` is necessary to allow smartctl permission to query your device SMART data.
-    * `SYS_RAWIO` is required for NVMe drives as per upstream issue [#26](https://github.com/AnalogJ/scrutiny/issues/26#issuecomment-696817130). 
+    * `SYS_RAWIO` is necessary to allow smartctl permission to query your device SMART data.
+    * `SYS_ADMIN` is required for NVMe drives as per upstream issue [#26](https://github.com/AnalogJ/scrutiny/issues/26#issuecomment-696817130). 
 
 # changelog
 changelogs:
