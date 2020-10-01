@@ -174,9 +174,9 @@ You may need to manually enter the container to run `scrutiny-collector-metrics 
 
 A fully commented example configuration yaml file can be found in the original project repository [here](https://github.com/AnalogJ/scrutiny/blob/master/example.scrutiny.yaml). Place this file in the location mounted to `/config`.
 
-A note on `--cap-add` for this container:
+A note on `--cap-add` for this container: 
   * `SYS_RAWIO` is necessary to allow smartctl permission to query your device SMART data.
-  * `SYS_ADMIN` is required for NVMe drives as per upstream issue [#26](https://github.com/AnalogJ/scrutiny/issues/26#issuecomment-696817130).
+  * `SYS_ADMIN` is required for NVMe drives as per upstream issue [#26](https://github.com/AnalogJ/scrutiny/issues/26#issuecomment-696817130). 
 
 
 ## Docker Mods
