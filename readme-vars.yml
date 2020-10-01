@@ -40,7 +40,7 @@ param_volumes:
 
 param_device_map: true
 param_devices:
-  - { device_path: "/dev/sda:ro", device_host_path: "/dev/sda", desc: "This is how Scrutiny accesses drives. Optionally supply `/dev:/dev` instead for all devices." }
+  - { device_path: "/dev/sda", device_host_path: "/dev/sda", desc: "This is how Scrutiny accesses drives. Optionally supply `/dev:/dev` instead for all devices." }
   - { device_path: "/dev/sdb", device_host_path: "/dev/sdb", desc: "A second drive." }
   - { device_path: "/dev/nvme1n1", device_host_path: "/dev/nvme1n1", desc: "An NVMe drive. NVMe requires `--cap-add=SYS_ADMIN`." }
 
