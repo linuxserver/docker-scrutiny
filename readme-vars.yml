@@ -29,7 +29,7 @@ param_usage_include_net: false
 param_usage_include_env: true
 param_env_vars:
   - { env_var: "TZ", env_value: "Europe/London", desc: "Specify a timezone to use EG Europe/London." }
-  - { env_var: "SCRUTINY_API_ENDPOINT", env_value: "http://localhost:8080", desc: "# optional - API endpoint of the scrutiny UI. Use the Inside port" }
+  - { env_var: "SCRUTINY_API_ENDPOINT", env_value: "http://localhost:8080", desc: "# optional - API endpoint of the scrutiny UI. Do not change" }
   - { env_var: "SCRUTINY_WEB", env_value: "true", desc: "# optional - Run the web service." }
   - { env_var: "SCRUTINY_COLLECTOR", env_value: "true", desc: "# optional - Run the metrics collector." }
 
