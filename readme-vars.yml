@@ -36,7 +36,9 @@ param_env_vars:
 param_usage_include_vols: true
 param_volumes:
   - { vol_path: "/config", vol_host_path: "<path to config>", desc: "Where config is stored." }
-  - { vol_path: "/dev/disk:ro", vol_host_path: "/dev/disk", desc: "This is how Scrutiny accesses drives." }
+  - { vol_path: "/dev/sda:ro", vol_host_path: "/dev/sda", desc: "This is how Scrutiny accesses drives. Optionally supply `/dev:/dev` instead for all devices." }
+  - { vol_path: "/dev/sdb:ro", vol_host_path: "/dev/sdb", desc: "A second drive." }
+  - { vol_path: "/dev/nvme1n1:ro", vol_host_path: "/dev/nvme1n1", desc: "An NVMe drive. NVMe requires `--cap-add=SYS_RAWIO`." }
   - { vol_path: "/run/udev:ro", vol_host_path: "/run/udev", desc: "Provides necessary metadata to Scrutiny." }
 
 param_usage_include_ports: true
@@ -56,20 +58,26 @@ opt_param_ports:
 opt_param_device_map: false
 opt_param_devices:
 
-opt_cap_add_param: false
-opt_cap_add_param_vars:
+cap_add_param: true
+cap_add_param_vars:
+    - { cap_add_var: "SYS_ADMIN" }
+    - { cap_add_var: "SYS_RAWIO" }
 
 optional_block_1: false
 optional_block_1_items: ""
 
-privileged: true
+privileged: false
 
 # application setup block
 app_setup_block_enabled: true
 app_setup_block: |
-  This container can be run as an 'all-in-one' deployment or as a hub / spoke deployment. Use the environment variables `SCRUTINY_WEB` and `SCRUTINY_COLLECTOR` to control the mode of the container. Setting both to `true` will deploy the container as both a collector and the web UI - this is the simplest and most straightforward deployment approach.
+  This container can be run as an 'all-in-one' deployment or as a hub / spoke deployment. Use the environment variables `SCRUTINY_WEB` and `SCRUTINY_COLLECTOR` to control the mode of the container. Setting both to `true` will deploy the container as both a collector and the web UI - this is the simplest and most straightforward deployment approach. To make use of the hub and spoke model, run this container in "collector" mode by specifying `SCRUTINY_API_ENDPOINT`. Set this to the host that is running the API. For this to work, you will need to expose the API port directly from the container (by default this is `8080`).
 
-  To make use of the hub and spoke model, run this container in "collector" mode by specifying `SCRUTINY_API_ENDPOINT`. Set this to the host that is running the API. For this to work, you will need to expose the API port directly from the container (by default this is `8080`).
+  A fully commented example configuration yaml file can be found in the original project repository [here](https://github.com/AnalogJ/scrutiny/blob/master/example.scrutiny.yaml). Place this file in the location mounted to `/config`.
+
+  A note on `--cap-add` for this container: 
+    * `SYS_ADMIN` is necessary to allow smartctl permission to query your device SMART data.
+    * `SYS_RAWIO` is required for NVMe drives as per upstream issue [#26](https://github.com/AnalogJ/scrutiny/issues/26#issuecomment-696817130). 
 
 # changelog
 changelogs:
