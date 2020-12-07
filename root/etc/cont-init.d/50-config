@@ -12,6 +12,11 @@ mkdir -p \
 
 ln -sf /config/scrutiny.yaml /scrutiny/config/scrutiny.yaml
 
+[[ ! -e "/config/collector.yaml" ]] && \
+    cp /defaults/collector.yaml /config/collector.yaml
+
+ln -sf /config/collector.yaml /scrutiny/config/collector.yaml
+
 # copy crontab if needed
 [[ ! -f /config/crontabs/root ]] && \
 	cp /etc/crontabs/root /config/crontabs/
