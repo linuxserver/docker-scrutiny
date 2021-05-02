@@ -53,7 +53,9 @@ RUN \
     build-dependencies && \
  rm -rf \
     /root/.cache \
-    /tmp/*
+    /tmp/* && \
+ echo "**** network fixes ****" && \
+ printf "hosts: files dns" > /etc/nsswitch.conf
 
 # copy local files
 COPY root/ /

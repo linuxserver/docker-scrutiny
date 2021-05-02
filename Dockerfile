@@ -55,7 +55,9 @@ RUN \
     /root/.cache \
     /tmp/* \
     /root/go \
-    /root/.npm
+    /root/.npm && \
+ echo "**** network fixes ****" && \
+ printf "hosts: files dns" > /etc/nsswitch.conf
 
 # copy local files
 COPY root/ /

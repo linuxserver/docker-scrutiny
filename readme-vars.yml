@@ -88,4 +88,5 @@ app_setup_block: |
 
 # changelog
 changelogs:
+  - { date: "22.11.20:", desc: "Added fix for `nsswitch.conf` to resolve local hosts" }
   - { date: "17.09.20:", desc: "Initial Release." }
